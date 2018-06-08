@@ -41,15 +41,13 @@ class FilterableList extends Component {
 
     let filteredUserList = allUsersList.filter(function(usrObj){
       if(visibleUserType === 'all') return true
-
+      
       if(usrObj.status === visibleUserType ){
         return true
       } else {
         return false
       }
-
     })
-
 
     let componentsArr = filteredUserList.map(function(usrObj){
       return <UserComponent username={usrObj.user} activeStatus={usrObj.status} />
