@@ -90,5 +90,14 @@ section div span:last-child{
 
 
 .status--active{
-  color: darkcyan;
+  background: darkcyan;
+  color: #fff;
+}
+
+.user--inactive{
+  color: firebrick;
+}
+
+.user--active{
+  color: darkgreen;
 }

@@ -1,55 +1,71 @@
 import React, { Component } from 'react';
 
 const allUsersList = [
-  { user: 'Tomas' , status: 'active'},
-  { user: 'Maria' , status: 'inactive'},
-  { user: 'Maria' , status: 'active'},
-  { user: 'Alejandra' , status: 'active'},
-  { user: 'Carolina' , status: 'active'},
-  { user: 'Romina' , status: 'inactive'},
-  { user: 'Daniela' , status: 'inactive'},
+  { user: 'Tomas' , status: 'happy'},
+  { user: 'Maria' , status: 'sad'},
+  { user: 'Shana' , status: 'happy'},
+  { user: 'Alejandra' , status: 'happy'},
+  { user: 'Carolina' , status: 'happy'},
+  { user: 'Romina' , status: 'sad'},
+  { user: 'Daniela' , status: 'sad'},
 ]
+
+class UserComponent extends Component{
+  render(){
+    return (
+      <div className="user--active">
+        <span>{this.props.username}</span>
+        <span>{this.props.activeStatus}</span>
+      </div>
+    )
+  }
+}
 
 class FilterableList extends Component {
   constructor(){
     super()
+
     this.state = {
-      visibleUserType: 'inactive'
+      visibleUserType: 'all'
     }
   }
 
-  _handleClick(val){
+  _handleUsrTypeClick(clickedType){
+
     this.setState({
-      visibleUserType: val
+      visibleUserType : clickedType
     })
   }
 
-  _showList(uList){
-    let jsxArray = uList.map(function(userObj){
+  _renderUserComponents(visibleUserType){
 
-      let userClassValStatus
-      let statusText
+    let filteredUserList = allUsersList.filter(function(usrObj){
+      if(visibleUserType === 'all') return true
 
-      if(userObj.status === 'active'){
-        statusText = 'ACTIVE'
-        userClassValStatus = 'status--active'
+      if(usrObj.status === visibleUserType ){
+        return true
       } else {
-        statusText = 'INACTIVE'
-        userClassValStatus = 'status--inactive'
+        return false
       }
 
-      return (
-        <div className={userClassValStatus}>
-          <span>{userObj.user}</span>
-          <span>{statusText}</span>
-        </div>
-      )
     })
-    return jsxArray
+
+
+    let componentsArr = filteredUserList.map(function(usrObj){
+      return <UserComponent username={usrObj.user} activeStatus={usrObj.status} />
+    })
+
+    return componentsArr
   }
 
   render() {
+    let allTagClassVal = 'status--inactive'
+    let happyTagClassVal = 'status--inactive'
+    let sadTagClassVal = 'status--inactive'
 
+    if(this.state.visibleUserType === 'all') allTagClassVal = 'status--active'
+    if(this.state.visibleUserType === 'happy') happyTagClassVal = 'status--active'
+    if(this.state.visibleUserType === 'sad') sadTagClassVal = 'status--active'
 
     return (
       <main>
@@ -58,14 +74,14 @@ class FilterableList extends Component {
           <h4>
             Currently showing: <mark>{this.state.visibleUserType}</mark>
           </h4>
-          <span onClick={ ()=>{this._handleClick('all') } }>All</span>
-          <span onClick={ ()=>{this._handleClick('active') } }>Active</span>
-          <span onClick={ ()=>{this._handleClick ('all')} }>Inactive</span>
+          <span className={allTagClassVal} onClick={ ()=>{ this._handleUsrTypeClick('all') } }>All</span>
+          <span className={happyTagClassVal} onClick={ ()=>{ this._handleUsrTypeClick('happy') } }>Happy</span>
+          <span className={sadTagClassVal} onClick={ ()=>{ this._handleUsrTypeClick('sad') } }>Sad</span>
         </aside>
 
 
         <section>
-          { this._showList(allUsersList) }
+           { this._renderUserComponents(this.state.visibleUserType) }
         </section>
 
       </main>
